@@ -1,6 +1,5 @@
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -26,13 +25,13 @@ public class SolutionBox {
 
         //Button
         Button retButton = new Button("Enter new Data");
-        gridPane.setConstraints(retButton, 1, 25);
+        GridPane.setConstraints(retButton, 1, 25);
         gridPane.getChildren().add(retButton);
         Button quitButton = new Button("Quit");
-        gridPane.setConstraints(quitButton, 3, 25);
+        GridPane.setConstraints(quitButton, 3, 25);
         gridPane.getChildren().add(quitButton);
         retButton.setOnAction(e -> {
-            StartBox.display();
+            Main.main(new String[]{});
             stage.close();
         });
         quitButton.setOnAction(e -> {

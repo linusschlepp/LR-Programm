@@ -21,12 +21,11 @@ public class StartBox {
 
     static Stage primaryStage;
 
-    StartBox(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-    }
 
 
-    public static void display() {
+
+    public static void display(Stage primaryStage) {
+        StartBox.primaryStage = primaryStage;
 
 
         //Layout

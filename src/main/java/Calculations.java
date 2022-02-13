@@ -6,8 +6,7 @@ public class Calculations {
     StringBuilder sb = new StringBuilder();
 
     Calculations(double[] nArray, double[] periodArray) {
-        for (int i = 0; i < nArray.length; i++)
-            allPredictions(periodArray, (int) nArray[i]);
+        for (double v : nArray) allPredictions(periodArray, (int) v);
         SolutionBox.display(sb.toString());
     }
 
@@ -16,14 +15,13 @@ public class Calculations {
         if (n < 1 || n > periods) {
             sb.append("Check n value...");
             sb.append("\n");
-            // System.exit(0);
         }
         ArrayList<Double> predictions = new ArrayList<>();
         for (int i = 0; i < n; i++)
             predictions.add(0.00); // Fill up list with n zeros.
         for (int i = 0; i < periods - n + 1; i++)
             predictions.add(nextPrediction(y, i, n));
-        sb.append("Predictions for n=" + n);
+        sb.append("Predictions for n=").append(n);
         sb.append("\n");
         printList(predictions);
         errors(y, predictions, n);
@@ -59,7 +57,7 @@ public class Calculations {
             errors.add(0.00);
         for (int i = n; i < y.length; i++)
             errors.add(y[i] - predictions.get(i));
-        sb.append("Error for n=" + n);
+        sb.append("Error for n=").append(n);
         sb.append("\n");
         printList(errors);
         minimizeErrors(errors, n);
@@ -70,7 +68,7 @@ public class Calculations {
         for (double error : errors) {
             squaredSum += Math.pow(error, 2);
         }
-        sb.append("Squared sum of errors for n=" + n);
+        sb.append("Squared sum of errors for n=").append(n);
         sb.append("\n");
         sb.append(Math.round(squaredSum * 100.0) / 100.0);
         sb.append("\n");
@@ -88,7 +86,6 @@ public class Calculations {
             }
         }
         sb.append("\n");
-        // System.out.println(sb.toString());
     }
 
 

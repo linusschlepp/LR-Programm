@@ -5,6 +5,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+import java.util.Arrays;
+
 public class nBox {
 
     public static void display(int amN, TextField[] tArray ){
@@ -27,19 +29,21 @@ public class nBox {
             textField.setPrefWidth(80);
             textField.setMaxWidth(80);
             iArray[i-1] = textField;
-            gridPane.setConstraints(textField, col+1, i );
-            gridPane.setConstraints(label, col , i);
+            GridPane.setConstraints(textField, col+1, i );
+            GridPane.setConstraints(label, col , i);
             gridPane.getChildren().addAll(label, textField);
 
         }
 
         //Button
         Button conButton = new Button("Continue");
-        gridPane.setConstraints(conButton, 0, amN+1);
+        GridPane.setConstraints(conButton, 0, amN+1);
         gridPane.getChildren().add(conButton);
 
         conButton.setOnAction(e -> {
-            new Calculations(ConvertArrays.convertArray(iArray), ConvertArrays.convertArray(tArray));
+            //new Calculations(ConvertArrays.convertArray(iArray), ConvertArrays.convertArray(tArray));
+            new Calculations(Arrays.stream(iArray).mapToDouble(t -> Double.parseDouble(t.getText())).toArray(),
+                    Arrays.stream(iArray).mapToDouble(t -> Double.parseDouble(t.getText())).toArray());
             stage.close();
         });
 
@@ -49,7 +53,7 @@ public class nBox {
         stage.setScene(scene);
         stage.setTitle("LR-Program");
         stage.show();
-        stage.close();
+    //    stage.close();
 
     }
 

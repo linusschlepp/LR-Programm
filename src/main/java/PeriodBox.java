@@ -39,8 +39,8 @@ public class PeriodBox {
             textField.setMaxWidth(80);
             tArray[i-1] = textField;
             Label label = new Label(i + ". period");
-            gridPane.setConstraints(textField, col+1, row );
-            gridPane.setConstraints(label, col , row );
+            GridPane.setConstraints(textField, col+1, row );
+            GridPane.setConstraints(label, col , row );
             gridPane.getChildren().addAll(label, textField);
             row++;
             if(i >= 10 && i%10==0 ) {
@@ -57,7 +57,7 @@ public class PeriodBox {
         nTextField.setPrefWidth(80);
         nTextField.setMaxWidth(80);
         gridPane.getChildren().add(nTextField);
-        gridPane.setConstraints(nTextField, 0, 13);
+        GridPane.setConstraints(nTextField, 0, 13);
         Button conButton = new Button("Continue");
         GridPane.setConstraints(conButton, 0, 14);
         gridPane.getChildren().add(conButton);
