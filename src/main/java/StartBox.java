@@ -8,11 +8,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+
 import static javafx.scene.text.Font.*;
+
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import static javafx.scene.text.FontPosture.*;
 import static javafx.scene.text.FontWeight.*;
 import static java.lang.Integer.*;
@@ -24,6 +30,8 @@ public class StartBox {
     static AtomicInteger xCord = new AtomicInteger(1);
     static AtomicInteger yCord = new AtomicInteger(5);
     static GridPane gridPane = new GridPane();
+    static List<Label> labelList = new ArrayList<>();
+    static List<TextField> textFieldlist = new ArrayList<>();
 
 
     public static void display(Stage primaryStage) {
@@ -39,27 +47,47 @@ public class StartBox {
 
         //Labels
         Label label = new Label("Enter your needs: ");
-        GridPane.setConstraints(label, 0, 1, 1,1);
+        GridPane.setConstraints(label, 0, 1, 1, 1);
 
         //ComboBox
-        ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(1,2,3,4,5));
-        GridPane.setConstraints(comboBox, 0,4);
+        ComboBox comboBox = new ComboBox(FXCollections.observableArrayList("1", "2", "3", "4", "5"));
+        GridPane.setConstraints(comboBox, 0, 4);
         gridPane.getChildren().add(comboBox);
-//        comboBox.valueProperty().addListener(e -> {
-//            int temp = yCord.get();
-//            temp -= 3;
-//            TextField t2 = new TextField();
-//            t2.setPrefWidth(60);
-//            t2.setMaxWidth(60);
-//            Label label1 = new Label("n"+temp);
-//            yCord.addAndGet(1);
-//            GridPane.setConstraints(t2, 1, yCord.get());
-//            GridPane.setConstraints(label1, 0, yCord.get());
-//            gridPane.getChildren().addAll(t2, label1);
-//        });
-        comboBox.valueProperty().addListener();
+
+        ChangeListener<String> changeListener1 = new ChangeListener<>() {
+
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+
+                try {
 
 
+                        labelList.forEach(l -> gridPane.getChildren().remove(l));
+                        textFieldlist.forEach(t -> gridPane.getChildren().remove(t));
+                        labelList.clear();
+                        textFieldlist.clear();
+                        yCord.set(5);
+
+                        for (int i = 0; i < Integer.parseInt(newValue); i++) {
+                            int temp = yCord.get();
+                            temp -= 4;
+                            Label label1 = new Label("n" + temp);
+                            yCord.addAndGet(1);
+                            TextField t2 = new TextField();
+                            t2.setPrefWidth(60);
+                            t2.setMaxWidth(60);
+                            GridPane.setConstraints(t2, 1, yCord.get());
+                            GridPane.setConstraints(label1, 0, yCord.get());
+                            gridPane.getChildren().addAll(t2, label1);
+                            textFieldlist.add(t2);
+                            labelList.add(label1);
+                        }
+
+
+                } catch(NumberFormatException ignored){}
+            }
+        };
+        comboBox.valueProperty().addListener(changeListener1);
 
 
         //TextFields
@@ -72,7 +100,6 @@ public class StartBox {
         Text mainText = new Text(20, 50, "Welcome to the linear regression calculator!");
         mainText.setFont(font("Calibri", BOLD, ITALIC, 18));
         GridPane.setConstraints(mainText, 0, 0);
-
 
 
         specialListener(textField);
