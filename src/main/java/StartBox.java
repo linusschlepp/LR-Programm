@@ -31,7 +31,7 @@ public class StartBox {
     static AtomicInteger yCord = new AtomicInteger(5);
     static GridPane gridPane = new GridPane();
     static List<Label> labelList = new ArrayList<>();
-    static List<TextField> textFieldlist = new ArrayList<>();
+    static List<TextField> textFields = new ArrayList<>();
 
 
     public static void display(Stage primaryStage) {
@@ -50,45 +50,38 @@ public class StartBox {
         GridPane.setConstraints(label, 0, 1, 1, 1);
 
         //ComboBox
-        ComboBox comboBox = new ComboBox(FXCollections.observableArrayList("1", "2", "3", "4", "5"));
+        ComboBox<String> comboBox = new ComboBox<>(FXCollections.observableArrayList("1", "2", "3", "4", "5"));
         GridPane.setConstraints(comboBox, 0, 4);
         gridPane.getChildren().add(comboBox);
 
-        ChangeListener<String> changeListener1 = new ChangeListener<>() {
+        //ChangeListener for ComboBox
+        ChangeListener<String> changeListener1 = (observable, oldValue, newValue) -> {
 
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+            try {
+                    labelList.forEach(l -> gridPane.getChildren().remove(l));
+                    textFields.forEach(t -> gridPane.getChildren().remove(t));
+                    labelList.clear();
+                    textFields.clear();
+                    yCord.set(5);
 
-                try {
+                    for (int i = 0; i < Integer.parseInt(newValue); i++) {
+                        int temp = yCord.get();
+                        temp -= 4;
+                        Label label1 = new Label("n" + temp);
+                        yCord.addAndGet(1);
+                        TextField t2 = new TextField();
+                        t2.setPrefWidth(60);
+                        t2.setMaxWidth(60);
+                        GridPane.setConstraints(t2, 1, yCord.get());
+                        GridPane.setConstraints(label1, 0, yCord.get());
+                        gridPane.getChildren().addAll(t2, label1);
+                        textFields.add(t2);
+                        labelList.add(label1);
+                    }
 
-
-                        labelList.forEach(l -> gridPane.getChildren().remove(l));
-                        textFieldlist.forEach(t -> gridPane.getChildren().remove(t));
-                        labelList.clear();
-                        textFieldlist.clear();
-                        yCord.set(5);
-
-                        for (int i = 0; i < Integer.parseInt(newValue); i++) {
-                            int temp = yCord.get();
-                            temp -= 4;
-                            Label label1 = new Label("n" + temp);
-                            yCord.addAndGet(1);
-                            TextField t2 = new TextField();
-                            t2.setPrefWidth(60);
-                            t2.setMaxWidth(60);
-                            GridPane.setConstraints(t2, 1, yCord.get());
-                            GridPane.setConstraints(label1, 0, yCord.get());
-                            gridPane.getChildren().addAll(t2, label1);
-                            textFieldlist.add(t2);
-                            labelList.add(label1);
-                        }
-
-
-                } catch(NumberFormatException ignored){}
-            }
+            } catch(NumberFormatException ignored){}
         };
         comboBox.valueProperty().addListener(changeListener1);
-
 
         //TextFields
         TextField textField = new TextField();
