@@ -3,9 +3,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 
-public class CustomItem extends GridPane {
+public class CustomGridPeriods extends GridPane {
 
-    public CustomItem(Label label, TextField textField){
+    private TextField textField;
+
+    public CustomGridPeriods(Label label, TextField textField){
+        this.textField = textField;
 
         textField.setMaxWidth(60);
         textField.setPrefWidth(60);
@@ -15,5 +18,7 @@ public class CustomItem extends GridPane {
         setConstraints(textField, 1, 0);
     }
 
-
+    public TextField getTextField() {
+        return textField;
+    }
 }

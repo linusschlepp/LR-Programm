@@ -40,7 +40,7 @@ public class SolutionBox {
 
 
         //Scene
-        Scene scene = new Scene(gridPane, 800, 500);
+        Scene scene = new Scene(gridPane, 1000, 800);
         stage.setTitle("LR-Program");
         stage.setScene(scene);
         stage.show();
