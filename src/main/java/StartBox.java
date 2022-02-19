@@ -97,7 +97,6 @@ public class StartBox {
         Button button = new Button("Calculate");
         button.setOnAction(e -> {
             try {
-              //  PeriodBox.display(parseInt(textField.getText()));
                 customItem1.getTextFieldList().removeIf(c -> c.getText().isEmpty());
                 if (customItem1.getTextFieldList().size() == 0)
                         throw new NumberFormatException();
@@ -118,7 +117,7 @@ public class StartBox {
 
 
         //final setup of scene and stage
-        gridPane.getChildren().addAll(label /*textField*/, mainText, button);
+        gridPane.getChildren().addAll(label , mainText, button);
         Scene scene = new Scene(gridPane, 1500, 700);
         primaryStage.setTitle("LR-Program");
         primaryStage.setScene(scene);
