@@ -46,7 +46,7 @@ public class SolutionBox {
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
         for (int i = 0; i < periodArray.length; i++)
             series.getData().add(new XYChart.Data<>(i + 1, periodArray[i]));
-        XYChart.Series<Number, Number> seriesPredictions = new XYChart.Series<>();
+
 //        for (int i = 0; i < periodArray.length; i++) {
 //            try {
 //              //  series1.getData().add(new XYChart.Data<>(i + 1, b1List.get(i) * (i + 1) + b0List.get(i)));
@@ -66,6 +66,7 @@ public class SolutionBox {
 
         //TODO: This needs to be fixed and finished
         ChangeListener<String> changeListener1 = (observable, oldValue, newValue) -> {
+            XYChart.Series<Number, Number> seriesPredictions = new XYChart.Series<>();
             lineChart.getData().remove(seriesPredictions);
             for (int i = 0; i < periodArray.length; i++) {
                 try {
