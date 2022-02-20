@@ -104,7 +104,7 @@ public class StartBox {
                                 mapToDouble(t -> Double.parseDouble(t.getTextField().getText())).toArray(),
                         Arrays.stream(customItem1.getTextFieldList().toArray(TextField[]::new)).
                         mapToDouble(t -> Double.parseDouble(t.getText())).toArray());
-                primaryStage.close();
+             //   primaryStage.close();
             } catch (NumberFormatException ex){
                 errorText = new Text(20, 50, "Enter values first!");
                 errorText.setFont(font("Calibri", BOLD, ITALIC, 14));
@@ -124,6 +124,11 @@ public class StartBox {
         primaryStage.show();
 
 
+    }
+
+
+    public static void closeStage(){
+        primaryStage.close();
     }
 }
 
