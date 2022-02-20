@@ -1,3 +1,5 @@
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Scene;
@@ -13,12 +15,12 @@ import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+
 
 public class SolutionBox {
 
-    public static void display(String finalString, double[] periodArray, List<Double> b0List, List<Double> b1List, HashMap<Double, Integer> predictionsMap) {
+    public static void display(String finalString, double[] periodArray, List<Double> b0List, List<Double> b1List, Multimap<Integer, Double> predictionsMap) {
 
         //Stage
         Stage stage = new Stage();
@@ -41,21 +43,11 @@ public class SolutionBox {
         NumberAxis xAxis = new NumberAxis();
         xAxis.setLabel("Period");
         NumberAxis yAxis = new NumberAxis();
-        yAxis.setLabel("Piece");
+        yAxis.setLabel("Pieces");
         LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
         for (int i = 0; i < periodArray.length; i++)
             series.getData().add(new XYChart.Data<>(i + 1, periodArray[i]));
-
-//        for (int i = 0; i < periodArray.length; i++) {
-//            try {
-//              //  series1.getData().add(new XYChart.Data<>(i + 1, b1List.get(i) * (i + 1) + b0List.get(i)));
-//                seriesPredictions.getData().add(new XYChart.Data<>(i + 1, new ArrayList<>(predictionsMap.keySet()).get(i)));
-//            } catch (IndexOutOfBoundsException e){
-//                seriesPredictions.getData().add(new XYChart.Data<>(i + 1, 0));
-//            }
-//
-//        }
 
         lineChart.getData().add(series);
         lineChart.setCreateSymbols(false);
@@ -68,22 +60,25 @@ public class SolutionBox {
         ChangeListener<String> changeListener1 = (observable, oldValue, newValue) -> {
             XYChart.Series<Number, Number> seriesPredictions = new XYChart.Series<>();
             lineChart.getData().remove(seriesPredictions);
+            Multimap<Integer, Double> tempMap = ArrayListMultimap.create(predictionsMap);
+            tempMap.keySet().removeIf(i -> i != Integer.parseInt(newValue));
             for (int i = 0; i < periodArray.length; i++) {
                 try {
-                    //  series1.getData().add(new XYChart.Data<>(i + 1, b1List.get(i) * (i + 1) + b0List.get(i)));
-                    seriesPredictions.getData().add(new XYChart.Data<>(i + 1, new ArrayList<>(predictionsMap.keySet()).get(i)));
-                } catch (IndexOutOfBoundsException e) {
-                    seriesPredictions.getData().add(new XYChart.Data<>(i + 1, 0));
+                    System.out.println(new ArrayList<>(tempMap.values()).get(i));
+                    seriesPredictions.getData().add(new XYChart.Data<>(i + 1, new ArrayList<>(tempMap.values()).get(i)));
+                } catch (IndexOutOfBoundsException ignored) {
+
                 }
 
             }
+            seriesPredictions.setName("Predictions for n= "+newValue);
             lineChart.getData().add(seriesPredictions);
         };
 
         //ComboBox
         ComboBox<String> comboBoxPredictions = new ComboBox<>();
-        for (Double d : predictionsMap.keySet())
-            comboBoxPredictions.getItems().add(Integer.toString(predictionsMap.get(d)));
+        for (Integer i  : predictionsMap.keySet())
+            comboBoxPredictions.getItems().add(Integer.toString(i));
         comboBoxPredictions.valueProperty().addListener(changeListener1);
         GridPane.setConstraints(comboBoxPredictions, 1, 2);
         gridPane.getChildren().add(comboBoxPredictions);

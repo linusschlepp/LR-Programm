@@ -1,3 +1,6 @@
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,7 +12,7 @@ public class Calculations {
     StringBuilder sb = new StringBuilder();
     List<Double> b0List = new ArrayList<>();
     List<Double> b1List = new ArrayList<>();
-    HashMap<Double, Integer> predictionsMap = new HashMap<>();
+    Multimap<Integer, Double> predictionsMap = ArrayListMultimap.create();
 
     Calculations(double[] nArray, double[] periodArray) {
         for (double v : nArray){
@@ -50,7 +53,7 @@ public class Calculations {
         b_0n = midpoint - b_1n * ((n + 1.0) / 2.0); // Calculating value of b_0n
         b0List.add(b_0n);
         b1List.add(b_1n);
-        predictionsMap.put((b_0n + b_1n * (n + 1)), n);
+        predictionsMap.put(n, (b_0n + b_1n * (n + 1)));
         return (b_0n + b_1n * (n + 1)); // Returning prediction for nex period.
     }
 
