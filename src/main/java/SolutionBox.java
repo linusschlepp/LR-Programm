@@ -1,6 +1,7 @@
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import javafx.beans.value.ChangeListener;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -24,8 +25,12 @@ import static javafx.scene.text.FontWeight.BOLD;
 public class SolutionBox {
 
 
-    static LineChart<Number, Number> lineChart;
+    private static LineChart<Number, Number> lineChart;
+    private static XYChart.Series<Number, Number> seriesPredictions;
+    private static XYChart.Series<Number, Number> seriesAllPredictions;
 
+
+    //TODO: Do some general refactoring of the code, make it prettier
     public static void display(String finalString, double[] periodArray, List<Double> b0List, List<Double> b1List, Multimap<Integer, Double> predictionsMap) {
 
         //Stage
@@ -34,6 +39,7 @@ public class SolutionBox {
 
         //Layout
         GridPane gridPane = new GridPane();
+        gridPane.setPadding(new Insets(10, 10, 10, 10));
 
         //mainText
         Text mainText = new Text(20, 50, "Data:");
@@ -64,46 +70,66 @@ public class SolutionBox {
         lineChart = new LineChart<>(xAxis, yAxis);
 
         initializeSeries(periodArray);
-
-      //  lineChart.setCreateSymbols(false);
         gridPane.getChildren().add(lineChart);
 
         GridPane.setConstraints(lineChart, 1, 8);
 
         ChangeListener<String> changeListener1 = (observable, oldValue, newValue) -> {
-            XYChart.Series<Number, Number> seriesPredictions = new XYChart.Series<>();
-            lineChart.getData().clear();
-            initializeSeries(periodArray);
+
+            if (seriesAllPredictions != null) {
+                lineChart.getData().clear();
+                initializeSeries(periodArray);
+            }
+
+            lineChart.getData().remove(seriesPredictions);
+            seriesPredictions = new XYChart.Series<>();
             Multimap<Integer, Double> tempMap = ArrayListMultimap.create(predictionsMap);
             tempMap.keySet().removeIf(i -> i != Integer.parseInt(newValue));
             for (int i = 0; i < new ArrayList<>(tempMap.values()).size(); i++)
-                    seriesPredictions.getData().add(new XYChart.Data<>(Math.abs(new ArrayList<>(tempMap.values()).size()
-                            -periodArray.length)+i+1, new ArrayList<>(tempMap.values()).get(i)));
+                seriesPredictions.getData().add(new XYChart.Data<>(Math.abs(new ArrayList<>(tempMap.values()).size()
+                        - periodArray.length) + i + 1, new ArrayList<>(tempMap.values()).get(i)));
 
 
-
-            seriesPredictions.setName("Predictions for n= "+newValue);
-            seriesPredictions.nodeProperty().get().setStyle("-fx-stroke: green");
+            seriesPredictions.setName("Predictions for n= " + newValue);
             lineChart.getData().add(seriesPredictions);
+
         };
 
         //ComboBox
         ComboBox<String> comboBoxPredictions = new ComboBox<>();
-
         predictionsMap.keySet().forEach(i -> comboBoxPredictions.getItems().add(Integer.toString(i)));
         comboBoxPredictions.valueProperty().addListener(changeListener1);
         GridPane.setConstraints(comboBoxPredictions, 1, 3);
         gridPane.getChildren().add(comboBoxPredictions);
 
 
-        //Button
+        //Buttons
+        Button showPredictions = new Button("Show all predictions");
+        GridPane.setConstraints(showPredictions, 1, 30);
+        gridPane.getChildren().add(showPredictions);
         Button retButton = new Button("Enter new Data");
-        GridPane.setConstraints(retButton, 1, 30);
+        GridPane.setConstraints(retButton, 1, 31);
         gridPane.getChildren().add(retButton);
         Button quitButton = new Button("Quit");
-        GridPane.setConstraints(quitButton, 1, 31);
+        GridPane.setConstraints(quitButton, 1, 32);
         gridPane.getChildren().add(quitButton);
 
+
+        showPredictions.setOnAction(e -> {
+            lineChart.getData().clear();
+            initializeSeries(periodArray);
+
+            for (Integer i : predictionsMap.keySet()) {
+                seriesAllPredictions = new XYChart.Series<>();
+                for (int j = 0; j < new ArrayList<>(predictionsMap.get(i)).size(); j++)
+                    seriesAllPredictions.getData().add(new XYChart.Data<>(Math.abs(new ArrayList<>(predictionsMap.get(i)).size()
+                            - periodArray.length) + j + 1, new ArrayList<>(predictionsMap.get(i)).get(j)));
+
+                seriesAllPredictions.setName("Predictions for n= " + i);
+                lineChart.getData().add(seriesAllPredictions);
+            }
+
+        });
 
         retButton.setOnAction(e -> {
             Main.launch();
@@ -117,6 +143,7 @@ public class SolutionBox {
 
         //Scene
         Scene scene = new Scene(gridPane, 1200, 800);
+        scene.getStylesheets().add("styles/style.css");
         stage.setTitle("LR-Program");
         stage.setScene(scene);
         stage.show();
@@ -124,7 +151,7 @@ public class SolutionBox {
     }
 
 
-    private static void initializeSeries(double[] periodArray){
+    private static void initializeSeries(double[] periodArray) {
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
         for (int i = 0; i < periodArray.length; i++)
             series.getData().add(new XYChart.Data<>(i + 1, periodArray[i]));

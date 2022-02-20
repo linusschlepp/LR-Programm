@@ -1,0 +1,23 @@
+.chart-series-line {
+    -fx-stroke-width: 3px;
+}
+
+    .default-color0.chart-series-line{-fx-stroke: red}
+    .default-color1.chart-series-line{-fx-stroke: blueviolet}
+    .default-color2.chart-series-line{-fx-stroke: green}
+    .default-color3.chart-series-line{-fx-stroke: orange}
+    .default-color4.chart-series-line{-fx-stroke: cyan}
+    .default-color5.chart-series-line{-fx-stroke: grey}
+    .default-color6.chart-series-line{-fx-stroke: darkred}
+    .default-color7.chart-series-line{-fx-stroke: yellow}
+
+
+    .default-color0.chart-line-symbol{-fx-background-color: red, red}
+    .default-color1.chart-line-symbol{-fx-background-color: blueviolet, blueviolet}
+    .default-color2.chart-line-symbol{-fx-background-color: green, green}
+    .default-color3.chart-line-symbol{-fx-background-color: orange, orange}
+    .default-color4.chart-line-symbol{-fx-background-color: cyan, cyan}
+    .default-color5.chart-line-symbol{-fx-background-color: grey, grey}
+    .default-color6.chart-line-symbol{-fx-background-color: darkred, darkred}
+    .default-color7.chart-line-symbol{-fx-background-color: yellow, yellow}
+
