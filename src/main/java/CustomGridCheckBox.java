@@ -3,23 +3,23 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.layout.GridPane;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CustomGridCheckBox extends GridPane {
 
 
-    private final List<CheckBox> checkBoxList = new ArrayList<>();
+    private final HashMap<Integer, CheckBox> checkBoxList = new HashMap<>();
 
     CustomGridCheckBox(Multimap<Integer, Double> predictionsMap){
 
         AtomicInteger index = new AtomicInteger(1);
         predictionsMap.keySet().forEach(i -> {
-            //  comboBoxPredictions.getItems().add(Integer.toString(i));
-            CheckBox checkBox = new CheckBox("n = "+i);
+            CheckBox checkBox = new CheckBox("n = "+i+" ");
             setConstraints(checkBox, index.get(), 3);
             index.getAndIncrement();
-            checkBoxList.add(checkBox);
+            checkBoxList.put(i, checkBox);
             this.getChildren().add(checkBox);
         });
     }
@@ -29,7 +29,7 @@ public class CustomGridCheckBox extends GridPane {
         return this;
     }
 
-    public List<CheckBox> getCheckBoxList(){
+    public HashMap<Integer, CheckBox> getCheckBoxList(){
         return checkBoxList;
     }
 

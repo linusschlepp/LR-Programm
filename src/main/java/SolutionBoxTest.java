@@ -115,7 +115,7 @@ public class SolutionBoxTest {
 //        });
         comboBoxPredictions.valueProperty().addListener(changeListener1);
         gridPane.getChildren().add(customGridCheckBox.getPane());
-        //GridPane.setConstraints(customGridCheckBox.getPane(), 1, 3);
+        GridPane.setConstraints(customGridCheckBox.getPane(), 1, 3);
 
 
         //Buttons
@@ -146,7 +146,7 @@ public class SolutionBoxTest {
 
         //TODO: Fix Error in this button
         retButton.setOnAction(e -> {
-            StartBox.display(new Stage());
+            Main.launch();
             stage.close();
             StartBox.closeStage();
         });
