@@ -2,23 +2,18 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+
 
 public class Calculations {
 
 
-    StringBuilder sb = new StringBuilder();
-    List<Double> b0List = new ArrayList<>();
-    List<Double> b1List = new ArrayList<>();
-    Multimap<Integer, Double> predictionsMap = ArrayListMultimap.create();
+    private final StringBuilder sb = new StringBuilder();
+    private final Multimap<Integer, Double> predictionsMap = ArrayListMultimap.create();
 
     Calculations(double[] nArray, double[] periodArray) {
-        for (double v : nArray){
-            allPredictions(periodArray, (int) v);
-        }
-        SolutionBox.display(sb.toString(), periodArray, b0List, b1List, predictionsMap);
+        for (double v : nArray) allPredictions(periodArray, (int) v);
+
+        SolutionBoxTest.display(sb.toString(), periodArray, predictionsMap);
 
     }
 
@@ -51,8 +46,6 @@ public class Calculations {
         }
         b_1n = b_1n_numerator / b_1n_denominator; // Division to get slope of linear function. Value of b_1n
         b_0n = midpoint - b_1n * ((n + 1.0) / 2.0); // Calculating value of b_0n
-        b0List.add(b_0n);
-        b1List.add(b_1n);
         predictionsMap.put(n, (b_0n + b_1n * (n + 1)));
         return (b_0n + b_1n * (n + 1)); // Returning prediction for nex period.
     }

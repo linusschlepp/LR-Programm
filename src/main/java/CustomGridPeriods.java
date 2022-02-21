@@ -5,7 +5,7 @@ import javafx.scene.layout.GridPane;
 
 public class CustomGridPeriods extends GridPane {
 
-    private TextField textField;
+    private final TextField textField;
 
     public CustomGridPeriods(Label label, TextField textField){
         this.textField = textField;

@@ -28,12 +28,12 @@ import static javafx.scene.text.FontWeight.*;
 
 public class StartBox {
 
-    static Stage primaryStage;
-    static AtomicInteger xCord = new AtomicInteger(1);
-    static AtomicInteger yCord = new AtomicInteger(5);
+    private static Stage primaryStage;
+    private static final AtomicInteger xCord = new AtomicInteger(1);
+    private static final AtomicInteger yCord = new AtomicInteger(5);
     static GridPane gridPane = new GridPane();
-    static List<CustomGridPeriods> customItems = new ArrayList<>();
-    static CustomGridNeeds customItem1 = new CustomGridNeeds();
+    private static final List<CustomGridPeriods> customItems = new ArrayList<>();
+    private static final CustomGridNeeds customItem1 = new CustomGridNeeds();
     static Text errorText;
 
     //TODO: Add Intents to GridPane and move things within layout to position x:0
@@ -44,8 +44,8 @@ public class StartBox {
         //Layout
         gridPane.getColumnConstraints().add(new ColumnConstraints(0));
         gridPane.getRowConstraints().add(new RowConstraints(25));
-        gridPane.setVgap(25);
-        gridPane.setHgap(75);
+        gridPane.setVgap(10);
+        gridPane.setHgap(10);
         // gridPane.setGridLinesVisible(true);
 
         //Labels
@@ -94,8 +94,8 @@ public class StartBox {
         GridPane.setConstraints(mainText, 1, 0);
 
         //Button
-        Button button = new Button("Calculate");
-        button.setOnAction(e -> {
+        Button calculateButton = new Button("Calculate");
+        calculateButton.setOnAction(e -> {
             try {
                 customItem1.getTextFieldList().removeIf(c -> c.getText().isEmpty());
                 if (customItem1.getTextFieldList().size() == 0)
@@ -113,11 +113,11 @@ public class StartBox {
                 gridPane.getChildren().add(errorText);
             }
         });
-        GridPane.setConstraints(button, 1, 15);
+        GridPane.setConstraints(calculateButton, 1, 15);
 
 
         //final setup of scene and stage
-        gridPane.getChildren().addAll(label , mainText, button);
+        gridPane.getChildren().addAll(label , mainText, calculateButton);
         Scene scene = new Scene(gridPane, 1500, 700);
         primaryStage.setTitle("LR-Program");
         primaryStage.setScene(scene);

@@ -7,6 +7,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
@@ -15,14 +16,15 @@ import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
 
 import static javafx.scene.text.Font.font;
 import static javafx.scene.text.FontPosture.ITALIC;
 import static javafx.scene.text.FontWeight.BOLD;
 
 
-public class SolutionBox {
+public class SolutionBoxTest {
 
 
     private static LineChart<Number, Number> lineChart;
@@ -30,9 +32,12 @@ public class SolutionBox {
     private static XYChart.Series<Number, Number> seriesAllPredictions;
 
 
+
     //TODO: Do some general refactoring of the code, make it prettier
     //TODO: Add comments
     public static void display(String finalString, double[] periodArray, Multimap<Integer, Double> predictionsMap) {
+
+      CustomGridCheckBox customGridCheckBox = new CustomGridCheckBox(predictionsMap);
 
         //Stage
         Stage stage = new Stage();
@@ -100,9 +105,17 @@ public class SolutionBox {
 
         //ComboBox
         ComboBox<String> comboBoxPredictions = new ComboBox<>();
-        predictionsMap.keySet().forEach(i -> comboBoxPredictions.getItems().add(Integer.toString(i)));
+        AtomicInteger index = new AtomicInteger(1);
+//        predictionsMap.keySet().forEach(i -> {
+//          //  comboBoxPredictions.getItems().add(Integer.toString(i));
+//            CheckBox checkBox = new CheckBox("n = "+i);
+//            GridPane.setConstraints(checkBox, index.get(), 3);
+//            index.getAndIncrement();
+//            gridPane.getChildren().add(checkBox);
+//        });
         comboBoxPredictions.valueProperty().addListener(changeListener1);
-        GridPane.setConstraints(comboBoxPredictions, 1, 3);
+        gridPane.getChildren().add(customGridCheckBox.getPane());
+        //GridPane.setConstraints(customGridCheckBox.getPane(), 1, 3);
 
 
         //Buttons
@@ -118,7 +131,7 @@ public class SolutionBox {
             lineChart.getData().clear();
             initializeSeries(periodArray);
 
-           predictionsMap.keySet().forEach(i -> {
+            predictionsMap.keySet().forEach(i -> {
                 seriesAllPredictions = new XYChart.Series<>();
                 for (int j = 0; j < new ArrayList<>(predictionsMap.get(i)).size(); j++)
                     seriesAllPredictions.getData().add(new XYChart.Data<>(Math.abs(new ArrayList<>(predictionsMap.get(i)).size()
@@ -144,7 +157,7 @@ public class SolutionBox {
 
 
         //Scene
-        gridPane.getChildren().addAll(mainText, nText, textArea, lineChart,comboBoxPredictions, showPredictions, retButton, quitButton);
+        gridPane.getChildren().addAll(mainText, nText, textArea, lineChart, showPredictions, retButton, quitButton);
         Scene scene = new Scene(gridPane, 1200, 800);
         scene.getStylesheets().add("styles/style.css");
         stage.setTitle("LR-Program");

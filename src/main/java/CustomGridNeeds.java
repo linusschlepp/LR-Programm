@@ -17,7 +17,7 @@ public class CustomGridNeeds extends GridPane {
     private TextField textField = new TextField();
     AtomicInteger xCord = new AtomicInteger(1);
     AtomicInteger periodCounter = new AtomicInteger(1);
-    private List<TextField> textFieldList = new ArrayList<>();
+    private final List<TextField> textFieldList = new ArrayList<>();
 
 
     CustomGridNeeds() {
