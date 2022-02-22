@@ -9,7 +9,6 @@ public class CustomGridPeriods extends GridPane {
 
     public CustomGridPeriods(Label label, TextField textField){
         this.textField = textField;
-
         textField.setMaxWidth(60);
         textField.setPrefWidth(60);
         this.getChildren().addAll(label, textField);

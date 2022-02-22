@@ -1,16 +1,13 @@
 import com.google.common.collect.Multimap;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.GridPane;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CustomGridCheckBox extends GridPane {
 
 
-    private final HashMap<Integer, CheckBox> checkBoxList = new HashMap<>();
+    private final HashMap<Integer, CheckBox> checkBoxHashMap = new HashMap<>();
 
     CustomGridCheckBox(Multimap<Integer, Double> predictionsMap){
 
@@ -19,7 +16,7 @@ public class CustomGridCheckBox extends GridPane {
             CheckBox checkBox = new CheckBox("n = "+i+" ");
             setConstraints(checkBox, index.get(), 3);
             index.getAndIncrement();
-            checkBoxList.put(i, checkBox);
+            checkBoxHashMap.put(i, checkBox);
             this.getChildren().add(checkBox);
         });
     }
@@ -29,8 +26,8 @@ public class CustomGridCheckBox extends GridPane {
         return this;
     }
 
-    public HashMap<Integer, CheckBox> getCheckBoxList(){
-        return checkBoxList;
+    public HashMap<Integer, CheckBox> getCheckBoxHashMap(){
+        return checkBoxHashMap;
     }
 
 }

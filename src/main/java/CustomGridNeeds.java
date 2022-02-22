@@ -50,7 +50,7 @@ public class CustomGridNeeds extends GridPane {
                 t2.setMaxWidth(60);
                 xCord.addAndGet(1);
                 periodCounter.addAndGet(1);
-                Text text = new Text(20, 50, Integer.toString(periodCounter.get()) + ".");
+                Text text = new Text(20, 50, periodCounter.get() + ".");
                 text.setFont(font("Calibri", BOLD, ITALIC, 14));
                 setConstraints(text, xCord.get(), 0);
                 setConstraints(t2, xCord.get(), 1);
@@ -60,6 +60,7 @@ public class CustomGridNeeds extends GridPane {
                 specialListener(t2);
             }
         };
+
         t1.textProperty().addListener(changeListener);
     }
 

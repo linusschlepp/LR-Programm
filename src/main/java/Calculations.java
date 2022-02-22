@@ -13,7 +13,7 @@ public class Calculations {
     Calculations(double[] nArray, double[] periodArray) {
         for (double v : nArray) allPredictions(periodArray, (int) v);
 
-        SolutionBoxTest.display(sb.toString(), periodArray, predictionsMap);
+        SolutionBox.display(sb.toString(), periodArray, predictionsMap);
 
     }
 

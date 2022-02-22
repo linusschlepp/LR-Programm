@@ -1,21 +1,30 @@
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.CheckBox;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import javafx.scene.control.TextArea;
-
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Objects;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import javafx.embed.swing.SwingFXUtils;
 
 import static javafx.scene.text.Font.font;
 import static javafx.scene.text.FontPosture.ITALIC;
@@ -26,17 +35,18 @@ public class SolutionBox {
 
 
     private static LineChart<Number, Number> lineChart;
-    private static XYChart.Series<Number, Number> seriesPredictions;
-    private static XYChart.Series<Number, Number> seriesAllPredictions;
+    private static final HashMap<CheckBox, XYChart.Series<Number, Number>> seriesHashMap = new HashMap<>();
+    // private static boolean alreadyInitialized = false;
 
 
     //TODO: Do some general refactoring of the code, make it prettier
     //TODO: Add comments
     public static void display(String finalString, double[] periodArray, Multimap<Integer, Double> predictionsMap) {
 
+        CustomGridCheckBox customGridCheckBox = new CustomGridCheckBox(predictionsMap);
+
         //Stage
         Stage stage = new Stage();
-
 
         //Layout
         GridPane gridPane = new GridPane();
@@ -63,77 +73,85 @@ public class SolutionBox {
         GridPane.setConstraints(textArea, 1, 1);
 
 
-
         //LineChart
         NumberAxis xAxis = new NumberAxis();
         xAxis.setLabel("Period");
         NumberAxis yAxis = new NumberAxis();
         yAxis.setLabel("Pieces");
         lineChart = new LineChart<>(xAxis, yAxis);
+        lineChart.setTitle("Visualization of actual need and predictions");
         lineChart.setPrefWidth(1000);
         lineChart.setPrefHeight(800);
 
+        //Need series is being drawn
         initializeSeries(periodArray);
 
+        //The checkBoxes are being placed on the GridPane
+        GridPane.setConstraints(customGridCheckBox.getPane(), 1, 3);
 
         GridPane.setConstraints(lineChart, 1, 4);
 
-        ChangeListener<String> changeListener1 = (observable, oldValue, newValue) -> {
-
-            if (seriesAllPredictions != null) {
-                lineChart.getData().clear();
-                initializeSeries(periodArray);
-            }
-            lineChart.getData().remove(seriesPredictions);
-            seriesPredictions = new XYChart.Series<>();
-            Multimap<Integer, Double> tempMap = ArrayListMultimap.create(predictionsMap);
-            tempMap.keySet().removeIf(i -> i != Integer.parseInt(newValue));
-            for (int i = 0; i < new ArrayList<>(tempMap.values()).size(); i++)
-                seriesPredictions.getData().add(new XYChart.Data<>(Math.abs(new ArrayList<>(tempMap.values()).size()
-                        - periodArray.length) + i + 1, new ArrayList<>(tempMap.values()).get(i)));
-
-
-            seriesPredictions.setName("Predictions for n= " + newValue);
-            lineChart.getData().add(seriesPredictions);
-
-        };
-
-        //ComboBox
-        ComboBox<String> comboBoxPredictions = new ComboBox<>();
-        predictionsMap.keySet().forEach(i -> comboBoxPredictions.getItems().add(Integer.toString(i)));
-        comboBoxPredictions.valueProperty().addListener(changeListener1);
-        GridPane.setConstraints(comboBoxPredictions, 1, 3);
-
 
         //Buttons
-        Button showPredictions = new Button("Show all predictions");
-        GridPane.setConstraints(showPredictions, 1, 5);
+//        Button showPredictions = new Button("Show all predictions");
+//        GridPane.setConstraints(showPredictions, 1, 5);
         Button retButton = new Button("Enter new Data");
         GridPane.setConstraints(retButton, 1, 6);
         Button quitButton = new Button("Quit");
         GridPane.setConstraints(quitButton, 1, 7);
+        Button printButton = new Button("Convert Chart to PDF");
+        GridPane.setConstraints(printButton, 1, 5);
 
 
-        showPredictions.setOnAction(e -> {
-            lineChart.getData().clear();
-            initializeSeries(periodArray);
+        //This code will maybe be used some time
+//        showPredictions.setOnAction(e -> {
+//            lineChart.getData().clear();
+//            initializeSeries(periodArray);
+//
+//            predictionsMap.keySet().forEach(i -> {
+//                seriesAllPredictions = new XYChart.Series<>();
+//                for (int j = 0; j < new ArrayList<>(predictionsMap.get(i)).size(); j++)
+//                    seriesAllPredictions.getData().add(new XYChart.Data<>(Math.abs(new ArrayList<>(predictionsMap.get(i)).size()
+//                            - periodArray.length) + j + 1, new ArrayList<>(predictionsMap.get(i)).get(j)));
+//
+//                seriesAllPredictions.setName("Predictions for n= " + i);
+//                lineChart.getData().add(seriesAllPredictions);
+//            });
+//            alreadyInitialized = true;
+//
+//        });
 
-           predictionsMap.keySet().forEach(i -> {
-                seriesAllPredictions = new XYChart.Series<>();
-                for (int j = 0; j < new ArrayList<>(predictionsMap.get(i)).size(); j++)
-                    seriesAllPredictions.getData().add(new XYChart.Data<>(Math.abs(new ArrayList<>(predictionsMap.get(i)).size()
-                            - periodArray.length) + j + 1, new ArrayList<>(predictionsMap.get(i)).get(j)));
+        customGridCheckBox.getCheckBoxHashMap().keySet().forEach(t -> {
+            customGridCheckBox.getCheckBoxHashMap().get(t).selectedProperty().addListener((observableValue, oldValue, newValue) -> {
+                if (newValue) {
+//                    if (alreadyInitialized) {
+//                        lineChart.getData().clear();
+//                        initializeSeries(periodArray);
+//                        alreadyInitialized = false;
+//
+//                    }
+                    XYChart.Series<Number, Number> seriesPredictions = new XYChart.Series<>();
+                    Multimap<Integer, Double> tempMap = ArrayListMultimap.create(predictionsMap);
+                    tempMap.keySet().removeIf(i -> !Objects.equals(i, t));
+                    for (int i = 0; i < new ArrayList<>(tempMap.values()).size(); i++)
+                        seriesPredictions.getData().add(new XYChart.Data<>(Math.abs(new ArrayList<>(tempMap.values()).size()
+                                - periodArray.length) + i + 1, new ArrayList<>(tempMap.values()).get(i)));
 
-                seriesAllPredictions.setName("Predictions for n= " + i);
-                lineChart.getData().add(seriesAllPredictions);
+
+                    seriesPredictions.setName("Predictions for n= " + t);
+                    seriesHashMap.put(customGridCheckBox.getCheckBoxHashMap().get(t), seriesPredictions);
+                    lineChart.getData().add(seriesPredictions);
+                } else {
+                    lineChart.getData().remove(seriesHashMap.get(customGridCheckBox.getCheckBoxHashMap().get(t)));
+                }
+
             });
-
         });
 
 
         //TODO: Fix Error in this button
         retButton.setOnAction(e -> {
-            StartBox.display(new Stage());
+            StartMain.main(new String[]{});
             stage.close();
             StartBox.closeStage();
         });
@@ -141,10 +159,44 @@ public class SolutionBox {
             stage.close();
             StartBox.closeStage();
         });
+        printButton.setOnAction(e -> {
+
+            WritableImage nodeShot = lineChart.snapshot(new SnapshotParameters(), null);
+            File tempFile = new File("chart.png");
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save pdf");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF files (*.pdf)","*.pdf"));
+
+
+            try {
+                ImageIO.write(SwingFXUtils.fromFXImage(nodeShot, null), "png", tempFile);
+            } catch (IOException ignored) {
+
+            }
+
+            PDDocument doc = new PDDocument();
+            PDPage page = new PDPage();
+            PDImageXObject pdImage;
+            PDPageContentStream content;
+            try {
+                pdImage = PDImageXObject.createFromFile("chart.png", doc);
+                content = new PDPageContentStream(doc, page);
+                content.drawImage(pdImage, 50, 50, 550, 550);
+                content.close();
+                doc.addPage(page);
+                doc.save(fileChooser.showSaveDialog(stage).getPath());
+                doc.close();
+                tempFile.delete();
+            } catch (IOException ignored) {
+
+            }
+
+
+        });
 
 
         //Scene
-        gridPane.getChildren().addAll(mainText, nText, textArea, lineChart,comboBoxPredictions, showPredictions, retButton, quitButton);
+        gridPane.getChildren().addAll(mainText, nText, textArea, lineChart, printButton, retButton, quitButton, customGridCheckBox.getPane());
         Scene scene = new Scene(gridPane, 1200, 800);
         scene.getStylesheets().add("styles/style.css");
         stage.setTitle("LR-Program");

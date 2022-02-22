@@ -36,7 +36,7 @@ public class StartBox {
     private static final CustomGridNeeds customItem1 = new CustomGridNeeds();
     static Text errorText;
 
-    //TODO: Add Intents to GridPane and move things within layout to position x:0
+
     public static void display(Stage primaryStage) {
         StartBox.primaryStage = primaryStage;
 
