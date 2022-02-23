@@ -3,11 +3,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 
-public class CustomGridPeriods extends GridPane {
+
+/**
+ * Symbolizes n in StartBox
+ *
+ */
+public class CustomGridN extends GridPane {
 
     private final TextField textField;
 
-    public CustomGridPeriods(Label label, TextField textField){
+    public CustomGridN(Label label, TextField textField){
         this.textField = textField;
         textField.setMaxWidth(60);
         textField.setPrefWidth(60);

@@ -1,7 +1,9 @@
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-
+import org.apache.commons.lang3.ArrayUtils;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 
 
 public class Calculations {
@@ -10,10 +12,21 @@ public class Calculations {
     private final StringBuilder sb = new StringBuilder();
     private final Multimap<Integer, Double> predictionsMap = ArrayListMultimap.create();
 
-    Calculations(double[] nArray, double[] periodArray) {
-        for (double v : nArray) allPredictions(periodArray, (int) v);
+    /**
+     * Calculates the predictions, based on the needs, entered by the user
+     *
+     * @param nArray contains all the n's, which have been entered by the user
+     * @param needArray contains all the needs, which have been entered by the user
+     */
+    Calculations(double[] nArray, double[] needArray) {
 
-        SolutionBox.display(sb.toString(), periodArray, predictionsMap);
+        sb.append("Entered Needs:").append("\n");
+        printList(new ArrayList<>(Arrays.asList(ArrayUtils.toObject(needArray))));
+
+
+        for (double v : nArray) allPredictions(needArray, (int) v);
+
+        SolutionBox.display(sb.toString(), needArray, predictionsMap);
 
     }
 

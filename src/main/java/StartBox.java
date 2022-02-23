@@ -14,39 +14,43 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import static javafx.scene.text.FontPosture.*;
 import static javafx.scene.text.FontWeight.*;
 
 
-
 public class StartBox {
 
-    private static Stage primaryStage;
+
     private static final AtomicInteger xCord = new AtomicInteger(1);
     private static final AtomicInteger yCord = new AtomicInteger(5);
     static GridPane gridPane = new GridPane();
-    private static final List<CustomGridPeriods> customItems = new ArrayList<>();
-    private static final CustomGridNeeds customItem1 = new CustomGridNeeds();
-    static Text errorText;
+    private static final List<CustomGridN> customItems = new ArrayList<>();
+    private static final CustomGridNeeds customItemNeed = new CustomGridNeeds();
+    static Text errorText = new Text(20, 50, "Enter valid values!");
 
-
+    /**
+     * Displays the layout of this Pane
+     *
+     * @param primaryStage stage is being passed by the Main Class
+     */
     public static void display(Stage primaryStage) {
-        StartBox.primaryStage = primaryStage;
 
 
-        //Layout
+
+        //Layout of this stage
         gridPane.getColumnConstraints().add(new ColumnConstraints(0));
         gridPane.getRowConstraints().add(new RowConstraints(25));
         gridPane.setVgap(10);
         gridPane.setHgap(10);
-        // gridPane.setGridLinesVisible(true);
+
+        //errorText
+        errorText.setFont(font("Calibri", BOLD, ITALIC, 14));
+        errorText.setStroke(Color.RED);
+        GridPane.setConstraints(errorText, 2, 15);
 
         //Labels
         Label label = new Label("Enter your needs: ");
@@ -59,36 +63,41 @@ public class StartBox {
 
         //Label for ComboBox
         Label labelComboBox = new Label("How many n's do you need?");
-        GridPane.setConstraints(labelComboBox, 1,3);
+        GridPane.setConstraints(labelComboBox, 1, 3);
         gridPane.getChildren().add(labelComboBox);
 
 
         //ChangeListener for ComboBox
-        ChangeListener<String> changeListener1 = (observable, oldValue, newValue) -> {
+        ChangeListener<String> changeListenerComboBox = (observable, oldValue, newValue) -> {
 
             gridPane.getChildren().remove(errorText);
             try {
+                //Every item gets removed from the layout
                 customItems.forEach(c -> gridPane.getChildren().remove(c));
                 customItems.clear();
+                //yCord is set to default again
                 yCord.set(5);
 
+                // Number of customItems get added to the layout
                 for (int i = 0; i < Integer.parseInt(newValue); i++) {
                     int number = yCord.get();
                     number -= 4;
                     yCord.addAndGet(1);
-                    CustomGridPeriods customItem = new CustomGridPeriods(new Label("n" + number), new TextField());
+                    CustomGridN customItem = new CustomGridN(new Label("n" + number), new TextField());
                     GridPane.setConstraints(customItem, 1, yCord.get());
                     gridPane.getChildren().add(customItem);
                     customItems.add(customItem);
                 }
-
-            } catch (NumberFormatException ignored) {
+            // if the user enters non-valid values the errorText is being displayed
+            } catch (NumberFormatException e) {
+                gridPane.getChildren().add(errorText);
             }
         };
-        comboBox.valueProperty().addListener(changeListener1);
+        //changeListenerComboBox is added to the ComboBox
+        comboBox.valueProperty().addListener(changeListenerComboBox);
 
-        GridPane.setConstraints(customItem1.getPane(), xCord.get(), 2);
-        gridPane.getChildren().add(customItem1.getPane());
+        GridPane.setConstraints(customItemNeed.getPane(), xCord.get(), 2);
+        gridPane.getChildren().add(customItemNeed.getPane());
         Text mainText = new Text(20, 50, "Welcome to the linear regression calculator!");
         mainText.setFont(font("Calibri", BOLD, ITALIC, 18));
         GridPane.setConstraints(mainText, 1, 0);
@@ -97,19 +106,19 @@ public class StartBox {
         Button calculateButton = new Button("Calculate");
         calculateButton.setOnAction(e -> {
             try {
-                customItem1.getTextFieldList().removeIf(c -> c.getText().isEmpty());
-                if (customItem1.getTextFieldList().size() == 0)
-                        throw new NumberFormatException();
-                new Calculations(Arrays.stream(customItems.toArray(CustomGridPeriods[]::new)).
-                                mapToDouble(t -> Double.parseDouble(t.getTextField().getText())).toArray(),
-                        Arrays.stream(customItem1.getTextFieldList().toArray(TextField[]::new)).
-                        mapToDouble(t -> Double.parseDouble(t.getText())).toArray());
-             //   primaryStage.close();
-            } catch (NumberFormatException ex){
-                errorText = new Text(20, 50, "Enter values first!");
-                errorText.setFont(font("Calibri", BOLD, ITALIC, 14));
-                errorText.setStroke(Color.RED);
-                GridPane.setConstraints(errorText, 2, 15);
+                // Empty entries are removed from the list
+                customItemNeed.getTextFieldList().removeIf(c -> c.getText().isEmpty());
+                //if the user has not entered any values/ selected n a NumberFormatException is being thrown
+                if (customItemNeed.getTextFieldList().size() == 0)
+                    throw new NumberFormatException();
+                // Both lists are converted to double Arrays and passed to Calculations
+                new Calculations(Arrays.stream(customItems.toArray(CustomGridN[]::new)).
+                        mapToDouble(t -> Double.parseDouble(t.getTextField().getText())).toArray(),
+                        Arrays.stream(customItemNeed.getTextFieldList().toArray(TextField[]::new)).
+                                mapToDouble(t -> Double.parseDouble(t.getText())).toArray());
+                // Stage gets closed after we pass the values to Calculations
+                primaryStage.close();
+            } catch (NumberFormatException ex) {
                 gridPane.getChildren().add(errorText);
             }
         });
@@ -117,7 +126,7 @@ public class StartBox {
 
 
         //final setup of scene and stage
-        gridPane.getChildren().addAll(label , mainText, calculateButton);
+        gridPane.getChildren().addAll(label, mainText, calculateButton);
         Scene scene = new Scene(gridPane, 1500, 700);
         primaryStage.setTitle("LR-Program");
         primaryStage.setScene(scene);
@@ -127,9 +136,6 @@ public class StartBox {
     }
 
 
-    public static void closeStage(){
-        primaryStage.close();
-    }
 }
 
 

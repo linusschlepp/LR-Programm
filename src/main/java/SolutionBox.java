@@ -1,5 +1,6 @@
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
@@ -39,9 +40,15 @@ public class SolutionBox {
     // private static boolean alreadyInitialized = false;
 
 
-    //TODO: Do some general refactoring of the code, make it prettier
-    //TODO: Add comments
-    public static void display(String finalString, double[] periodArray, Multimap<Integer, Double> predictionsMap) {
+
+    /**
+     * Displays layout of the SolutionBox, displays solution
+     *
+     * @param finalString finalString which is being entered in the TextArea
+     * @param needArray contains the needs of each period
+     * @param predictionsMap contains the predictions, for each n
+     */
+    public static void display(String finalString, double[] needArray, Multimap<Integer, Double> predictionsMap) {
 
         CustomGridCheckBox customGridCheckBox = new CustomGridCheckBox(predictionsMap);
 
@@ -84,11 +91,10 @@ public class SolutionBox {
         lineChart.setPrefHeight(800);
 
         //Need series is being drawn
-        initializeSeries(periodArray);
+        initializeSeries(needArray);
 
         //The checkBoxes are being placed on the GridPane
         GridPane.setConstraints(customGridCheckBox.getPane(), 1, 3);
-
         GridPane.setConstraints(lineChart, 1, 4);
 
 
@@ -106,13 +112,13 @@ public class SolutionBox {
         //This code will maybe be used some time
 //        showPredictions.setOnAction(e -> {
 //            lineChart.getData().clear();
-//            initializeSeries(periodArray);
+//            initializeSeries(needArray);
 //
 //            predictionsMap.keySet().forEach(i -> {
 //                seriesAllPredictions = new XYChart.Series<>();
 //                for (int j = 0; j < new ArrayList<>(predictionsMap.get(i)).size(); j++)
 //                    seriesAllPredictions.getData().add(new XYChart.Data<>(Math.abs(new ArrayList<>(predictionsMap.get(i)).size()
-//                            - periodArray.length) + j + 1, new ArrayList<>(predictionsMap.get(i)).get(j)));
+//                            - needArray.length) + j + 1, new ArrayList<>(predictionsMap.get(i)).get(j)));
 //
 //                seriesAllPredictions.setName("Predictions for n= " + i);
 //                lineChart.getData().add(seriesAllPredictions);
@@ -121,48 +127,53 @@ public class SolutionBox {
 //
 //        });
 
-        customGridCheckBox.getCheckBoxHashMap().keySet().forEach(t -> {
-            customGridCheckBox.getCheckBoxHashMap().get(t).selectedProperty().addListener((observableValue, oldValue, newValue) -> {
+        //iterate through the HashMap of customGridCheckBox
+        customGridCheckBox.getCheckBoxHashMap().keySet().forEach(checkBoxEntry -> {
+            //for every item within the map of customGridCheckBox a Listener is being added
+            customGridCheckBox.getCheckBoxHashMap().get(checkBoxEntry).selectedProperty().addListener((observableValue, oldValue, newValue) -> {
+                // if the checkBox is selected the individual series is added to the chart
                 if (newValue) {
 //                    if (alreadyInitialized) {
 //                        lineChart.getData().clear();
-//                        initializeSeries(periodArray);
+//                        initializeSeries(needArray);
 //                        alreadyInitialized = false;
 //
 //                    }
+                    // new Series is being created
                     XYChart.Series<Number, Number> seriesPredictions = new XYChart.Series<>();
+                    // A temporary Map is being created to operate on the values of predictionsMap
                     Multimap<Integer, Double> tempMap = ArrayListMultimap.create(predictionsMap);
-                    tempMap.keySet().removeIf(i -> !Objects.equals(i, t));
+                    // all entries, which don't fit checkBoxEntry will be removed from tempMap
+                    tempMap.keySet().removeIf(i -> !Objects.equals(i, checkBoxEntry));
                     for (int i = 0; i < new ArrayList<>(tempMap.values()).size(); i++)
                         seriesPredictions.getData().add(new XYChart.Data<>(Math.abs(new ArrayList<>(tempMap.values()).size()
-                                - periodArray.length) + i + 1, new ArrayList<>(tempMap.values()).get(i)));
+                                - needArray.length) + i + 1, new ArrayList<>(tempMap.values()).get(i)));
 
-
-                    seriesPredictions.setName("Predictions for n= " + t);
-                    seriesHashMap.put(customGridCheckBox.getCheckBoxHashMap().get(t), seriesPredictions);
+                    seriesPredictions.setName("Predictions for n= " + checkBoxEntry);
+                    // integer value and series are added to seriesHashMap
+                    seriesHashMap.put(customGridCheckBox.getCheckBoxHashMap().get(checkBoxEntry), seriesPredictions);
+                    // new Series is being added to the chart
                     lineChart.getData().add(seriesPredictions);
-                } else {
-                    lineChart.getData().remove(seriesHashMap.get(customGridCheckBox.getCheckBoxHashMap().get(t)));
-                }
-
+                    // if the checkBox is not selected the individual series is removed from the chart
+                } else
+                    lineChart.getData().remove(seriesHashMap.get(customGridCheckBox.getCheckBoxHashMap().get(checkBoxEntry)));
             });
         });
 
 
         //TODO: Fix Error in this button
         retButton.setOnAction(e -> {
-            StartMain.main(new String[]{});
+          StartBox.display(new Stage());
             stage.close();
-            StartBox.closeStage();
         });
-        quitButton.setOnAction(e -> {
-            stage.close();
-            StartBox.closeStage();
-        });
+        // if the user wants to quit, the stage is closed
+        quitButton.setOnAction(e -> stage.close());
         printButton.setOnAction(e -> {
 
+            //User selects the path for the Screenshot
             WritableImage nodeShot = lineChart.snapshot(new SnapshotParameters(), null);
             File tempFile = new File("chart.png");
+            //selects path for pdf
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save pdf");
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF files (*.pdf)","*.pdf"));
@@ -179,6 +190,7 @@ public class SolutionBox {
             PDImageXObject pdImage;
             PDPageContentStream content;
             try {
+                //pdf file is being created from temporary file
                 pdImage = PDImageXObject.createFromFile("chart.png", doc);
                 content = new PDPageContentStream(doc, page);
                 content.drawImage(pdImage, 50, 50, 550, 550);
@@ -206,10 +218,10 @@ public class SolutionBox {
     }
 
 
-    private static void initializeSeries(double[] periodArray) {
+    private static void initializeSeries(double[] needArray) {
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
-        for (int i = 0; i < periodArray.length; i++)
-            series.getData().add(new XYChart.Data<>(i + 1, periodArray[i]));
+        for (int i = 0; i < needArray.length; i++)
+            series.getData().add(new XYChart.Data<>(i + 1, needArray[i]));
 
         series.setName("Actual Need");
         lineChart.getData().add(series);

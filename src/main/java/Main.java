@@ -8,6 +8,8 @@ public class Main extends Application {
      * Program to calculate Linear-Regression
      */
     public static void main(String[] args) {
+
+
         launch(args);
     }
 
