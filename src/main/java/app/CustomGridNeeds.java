@@ -1,3 +1,5 @@
+package app;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextField;
@@ -13,7 +15,7 @@ import static javafx.scene.text.FontWeight.BOLD;
 
 
 /**
- * Symbolizes the needs on StartBox
+ * Symbolizes the needs on app.StartBox
  *
  */
 public class CustomGridNeeds extends GridPane {

@@ -1,3 +1,5 @@
+package app;
+
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
@@ -5,7 +7,7 @@ import javafx.scene.layout.GridPane;
 
 
 /**
- * Symbolizes n in StartBox
+ * Symbolizes n in app.StartBox
  *
  */
 public class CustomGridN extends GridPane {

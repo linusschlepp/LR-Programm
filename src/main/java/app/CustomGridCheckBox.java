@@ -1,3 +1,5 @@
+package app;
+
 import com.google.common.collect.Multimap;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.GridPane;
@@ -6,7 +8,7 @@ import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Symbolizes the CheckBoxes in SolutionBox
+ * Symbolizes the CheckBoxes in app.SolutionBox
  *
  */
 public class CustomGridCheckBox extends GridPane {

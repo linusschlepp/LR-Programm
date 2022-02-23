@@ -1,6 +1,7 @@
+package app;
+
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
@@ -42,7 +43,7 @@ public class SolutionBox {
 
 
     /**
-     * Displays layout of the SolutionBox, displays solution
+     * Displays layout of the app.SolutionBox, displays solution
      *
      * @param finalString finalString which is being entered in the TextArea
      * @param needArray contains the needs of each period

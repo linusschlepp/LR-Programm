@@ -1,3 +1,5 @@
+package app;
+
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import org.apache.commons.lang3.ArrayUtils;

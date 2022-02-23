@@ -1,3 +1,5 @@
+package app;
+
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
@@ -5,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 
@@ -35,7 +38,7 @@ public class StartBox {
     /**
      * Displays the layout of this Pane
      *
-     * @param primaryStage stage is being passed by the Main Class
+     * @param primaryStage stage is being passed by the app.Main Class
      */
     public static void display(Stage primaryStage) {
 
@@ -111,12 +114,12 @@ public class StartBox {
                 //if the user has not entered any values/ selected n a NumberFormatException is being thrown
                 if (customItemNeed.getTextFieldList().size() == 0)
                     throw new NumberFormatException();
-                // Both lists are converted to double Arrays and passed to Calculations
+                // Both lists are converted to double Arrays and passed to app.Calculations
                 new Calculations(Arrays.stream(customItems.toArray(CustomGridN[]::new)).
                         mapToDouble(t -> Double.parseDouble(t.getTextField().getText())).toArray(),
                         Arrays.stream(customItemNeed.getTextFieldList().toArray(TextField[]::new)).
                                 mapToDouble(t -> Double.parseDouble(t.getText())).toArray());
-                // Stage gets closed after we pass the values to Calculations
+                // Stage gets closed after we pass the values to app.Calculations
                 primaryStage.close();
             } catch (NumberFormatException ex) {
                 gridPane.getChildren().add(errorText);
