@@ -50,7 +50,8 @@ public class CustomGridNeeds extends GridPane {
     }
 
     private void specialListener(TextField t1) {
-
+        // Adds labels as well as TextFields to StartBox
+        // Listener gets only added to latest Textfield
         ChangeListener<String> changeListener = new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -74,6 +75,11 @@ public class CustomGridNeeds extends GridPane {
         t1.textProperty().addListener(changeListener);
     }
 
+    /**
+     * Returns every TextField in form of a list
+     *
+     * @return list of all TextFields
+     */
     public List<TextField> getTextFieldList() {
         return textFieldList;
     }
