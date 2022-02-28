@@ -24,6 +24,11 @@ public class CustomGridN extends GridPane {
         setConstraints(textField, 1, 0);
     }
 
+    /**
+     * Returns textField
+     *
+     * @return textField containing n
+     */
     public TextField getTextField() {
         return textField;
     }

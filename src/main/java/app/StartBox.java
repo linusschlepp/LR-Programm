@@ -17,6 +17,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -35,16 +36,21 @@ public class StartBox {
     private static final List<CustomGridN> customItems = new ArrayList<>();
     private static final CustomGridNeeds customItemNeed = new CustomGridNeeds();
     static Text errorText = new Text(20, 50, "Enter valid values!");
+    static Stage primaryStage;
+
+
+    StartBox(Stage primaryStage){
+        StartBox.primaryStage = primaryStage;
+    }
 
     /**
      * Displays the layout of this Pane
      *
-     * @param primaryStage stage is being passed by the app.Main Class
      */
-    public static void display(Stage primaryStage) {
+    public static void display() {
 
-
-
+        //Adds icon to stage
+        primaryStage.getIcons().add(new Image(Objects.requireNonNull(StartBox.class.getClassLoader().getResourceAsStream("AppIcon.png"))));
         //Layout of this stage
         gridPane.getColumnConstraints().add(new ColumnConstraints(0));
         gridPane.getRowConstraints().add(new RowConstraints(25));

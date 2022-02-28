@@ -2,6 +2,8 @@ package app;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
@@ -10,18 +12,21 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
+
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -41,15 +46,15 @@ public class SolutionBox {
     // private static boolean alreadyInitialized = false;
 
 
-
     /**
      * Displays layout of the app.SolutionBox, displays solution
      *
-     * @param finalString finalString which is being entered in the TextArea
-     * @param needArray contains the needs of each period
+     * @param finalString    finalString which is being entered in the TextArea
+     * @param needArray      contains the needs of each period
      * @param predictionsMap contains the predictions, for each n
      */
     public static void display(String finalString, double[] needArray, Multimap<Integer, Double> predictionsMap) {
+
 
         CustomGridCheckBox customGridCheckBox = new CustomGridCheckBox(predictionsMap);
 
@@ -162,10 +167,11 @@ public class SolutionBox {
         });
 
 
-        //TODO: Fix Error in this button
+//TODO: Still wasn't able to resolve this issue
         retButton.setOnAction(e -> {
-          StartBox.display(new Stage());
+            // StartBox.display(new Stage());
             stage.close();
+            StartBox.display();
         });
         // if the user wants to quit, the stage is closed
         quitButton.setOnAction(e -> stage.close());
@@ -177,10 +183,11 @@ public class SolutionBox {
             //selects path for pdf
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save pdf");
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF files (*.pdf)","*.pdf"));
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf"));
 
 
             try {
+                // LineChart is being converted to .png file
                 ImageIO.write(SwingFXUtils.fromFXImage(nodeShot, null), "png", tempFile);
             } catch (IOException ignored) {
 
@@ -199,8 +206,9 @@ public class SolutionBox {
                 doc.addPage(page);
                 doc.save(fileChooser.showSaveDialog(stage).getPath());
                 doc.close();
+                // tempFile (.png) is getting deleted
                 tempFile.delete();
-            } catch (IOException ignored) {
+            } catch (Exception ignored) {
 
             }
 
@@ -211,6 +219,8 @@ public class SolutionBox {
         //Scene
         gridPane.getChildren().addAll(mainText, nText, textArea, lineChart, printButton, retButton, quitButton, customGridCheckBox.getPane());
         Scene scene = new Scene(gridPane, 1200, 800);
+        //Adds icon to stage
+        stage.getIcons().add(new Image(Objects.requireNonNull(StartBox.class.getClassLoader().getResourceAsStream("AppIcon.png"))));
         scene.getStylesheets().add("styles/style.css");
         stage.setTitle("LR-Program");
         stage.setScene(scene);
@@ -219,6 +229,11 @@ public class SolutionBox {
     }
 
 
+    /**
+     * Adds need-line to LineChart
+     *
+     * @param needArray array, which contains all needs
+     */
     private static void initializeSeries(double[] needArray) {
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
         for (int i = 0; i < needArray.length; i++)
