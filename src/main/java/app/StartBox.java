@@ -23,29 +23,24 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import static javafx.scene.text.FontPosture.*;
 import static javafx.scene.text.FontWeight.*;
 
 
 public class StartBox {
 
-
-//    private static final AtomicInteger xCord = new AtomicInteger(1);
-//    private static final AtomicInteger yCord = new AtomicInteger(5);
-static GridPane gridPane = new GridPane();
-//    private static final List<CustomGridN> customItems = new ArrayList<>();
-//    private static final CustomGridNeeds customItemNeed = new CustomGridNeeds();
-static Text errorText = new Text(20, 50, "Enter valid values!");
-        static Stage primaryStage;
+    static GridPane gridPane = new GridPane();
+    static Text errorText = new Text(20, 50, "Enter valid values!");
+    static Stage primaryStage;
 
 
-    StartBox(Stage primaryStage){
+    StartBox(Stage primaryStage) {
         StartBox.primaryStage = primaryStage;
     }
 
     /**
      * Displays the layout of this Pane
-     *
      */
     public static void display() {
 
@@ -54,8 +49,6 @@ static Text errorText = new Text(20, 50, "Enter valid values!");
         gridPane = new GridPane();
         final List<CustomGridN> customItems = new ArrayList<>();
         final CustomGridNeeds customItemNeed = new CustomGridNeeds();
-       // Text errorText = new Text(20, 50, "Enter valid values!");
-        //Stage primaryStage;
 
         //Adds icon to stage
         primaryStage.getIcons().add(new Image(Objects.requireNonNull(StartBox.class.getClassLoader().getResourceAsStream("AppIcon.png"))));
@@ -106,7 +99,7 @@ static Text errorText = new Text(20, 50, "Enter valid values!");
                     gridPane.getChildren().add(customItem);
                     customItems.add(customItem);
                 }
-            // if the user enters non-valid values the errorText is being displayed
+                // if the user enters non-valid values the errorText is being displayed
             } catch (NumberFormatException e) {
                 gridPane.getChildren().add(errorText);
             }
@@ -144,9 +137,9 @@ static Text errorText = new Text(20, 50, "Enter valid values!");
 
 
         //final setup of scene and stage
-        Scene scene = new Scene(gridPane, 1500, 700);
+        //Scene scene = new Scene(gridPane, 1500, 700);
         gridPane.getChildren().addAll(label, mainText, calculateButton);
-       // Scene scene = new Scene(gridPane, 1500, 700);
+        Scene scene = new Scene(gridPane, 1500, 700);
         primaryStage.setTitle("LR-Program");
         primaryStage.setScene(scene);
         primaryStage.show();

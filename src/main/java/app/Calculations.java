@@ -32,6 +32,12 @@ public class Calculations {
 
     }
 
+    /**
+     * Adds all parameters to list
+     *
+     * @param y needs
+     * @param n n-parameter
+     */
     public void allPredictions(double[] y, int n) {
         int periods = y.length;
         if (n < 1 || n > periods) {
@@ -49,6 +55,14 @@ public class Calculations {
         errors(y, predictions, n);
     }
 
+    /**
+     * Calculates next prediction
+     *
+     * @param y needs
+     * @param start start-value
+     * @param n n-parameter
+     * @return next prediction
+     */
     public double nextPrediction(double[] y, int start, int n) {
         double midpoint = midpoint(y, start, n);
         double k = 1, b_1n, b_1n_numerator = 0, b_1n_denominator = 0, b_0n;
@@ -65,6 +79,14 @@ public class Calculations {
         return (b_0n + b_1n * (n + 1)); // Returning prediction for nex period.
     }
 
+    /**
+     * Calculates midpoint
+     *
+     * @param y contains needs
+     * @param start start value
+     * @param n n-parameter
+     * @return midpoint (average)
+     */
     public double midpoint(double[] y, int start, int n) {
         double sum = 0;
         for (int i = 0; i < n; i++) {
@@ -74,6 +96,13 @@ public class Calculations {
         return sum / n;
     }
 
+    /**
+     * Calculates errors (needs-predictions)
+     *
+     * @param y needs
+     * @param predictions calculated predictions
+     * @param n parameter-n
+     */
     public void errors(double[] y, ArrayList<Double> predictions, int n) {
         ArrayList<Double> errors = new ArrayList<>();
         for (int i = 0; i < n; i++)
@@ -86,6 +115,12 @@ public class Calculations {
         minimizeErrors(errors, n);
     }
 
+    /**
+     * Calculates squared sum of errors
+     *
+     * @param errors calculated errors
+     * @param n parameter-n
+     */
     public void minimizeErrors(ArrayList<Double> errors, int n) {
         double squaredSum = 0;
         for (double error : errors) {
@@ -97,7 +132,11 @@ public class Calculations {
         sb.append("\n");
     }
 
-    // Just a toString function for ArrayLists to print predictions more nicely.
+    /**
+     * Works as basic toString-function to print needs as well as predictions in a pretty way
+     *
+     * @param predictions predictions, which have been calculated
+     */
     public void printList(ArrayList<Double> predictions) {
         sb.append("[ ");
         for (int i = 0; i < predictions.size(); i++) {
