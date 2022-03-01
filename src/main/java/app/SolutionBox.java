@@ -167,18 +167,16 @@ public class SolutionBox {
         });
 
 
-//TODO: Still wasn't able to resolve this issue
+// Enables the user to add new data
         retButton.setOnAction(e -> {
-            // StartBox.display(new Stage());
             stage.close();
+            StartBox.gridPane = null;
             StartBox.display();
         });
         // if the user wants to quit, the stage is closed
         quitButton.setOnAction(e -> stage.close());
         printButton.setOnAction(e -> {
 
-            //User selects the path for the Screenshot
-            WritableImage nodeShot = lineChart.snapshot(new SnapshotParameters(), null);
             File tempFile = new File("chart.png");
             //selects path for pdf
             FileChooser fileChooser = new FileChooser();
@@ -188,7 +186,8 @@ public class SolutionBox {
 
             try {
                 // LineChart is being converted to .png file
-                ImageIO.write(SwingFXUtils.fromFXImage(nodeShot, null), "png", tempFile);
+                ImageIO.write(SwingFXUtils.fromFXImage(lineChart.snapshot(new SnapshotParameters(), null), null),
+                        "png", tempFile);
             } catch (IOException ignored) {
 
             }
