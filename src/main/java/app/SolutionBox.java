@@ -24,6 +24,7 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -110,7 +111,9 @@ public class SolutionBox {
         Button retButton = new Button("Enter new Data");
         GridPane.setConstraints(retButton, 1, 6);
         Button quitButton = new Button("Quit");
-        GridPane.setConstraints(quitButton, 1, 7);
+        GridPane.setConstraints(quitButton, 1, 8);
+        Button excelButton = new Button("Move Data to Excel");
+        GridPane.setConstraints(excelButton, 1,7);
         Button printButton = new Button("Convert Chart to PDF");
         GridPane.setConstraints(printButton, 1, 5);
 
@@ -167,7 +170,7 @@ public class SolutionBox {
         });
 
 
-// Enables the user to add new data
+        // Enables the user to add new data
         retButton.setOnAction(e -> {
             stage.close();
             StartBox.gridPane = null;
@@ -175,48 +178,17 @@ public class SolutionBox {
         });
         // if the user wants to quit, the stage is closed
         quitButton.setOnAction(e -> stage.close());
-        printButton.setOnAction(e -> {
 
-            File tempFile = new File("chart.png");
-            //selects path for pdf
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Save pdf");
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf"));
-
-
-            try {
-                // LineChart is being converted to .png file
-                ImageIO.write(SwingFXUtils.fromFXImage(lineChart.snapshot(new SnapshotParameters(), null), null),
-                        "png", tempFile);
-            } catch (IOException ignored) {
-
-            }
-
-            PDDocument doc = new PDDocument();
-            PDPage page = new PDPage();
-            PDImageXObject pdImage;
-            PDPageContentStream content;
-            try {
-                //pdf file is being created from temporary file
-                pdImage = PDImageXObject.createFromFile("chart.png", doc);
-                content = new PDPageContentStream(doc, page);
-                content.drawImage(pdImage, 50, 50, 550, 550);
-                content.close();
-                doc.addPage(page);
-                doc.save(fileChooser.showSaveDialog(stage).getPath());
-                doc.close();
-                // tempFile (.png) is getting deleted
-                tempFile.delete();
-            } catch (Exception ignored) {
-
-            }
-
-
+        excelButton.setOnAction(e -> {
+            new CreateExcel(needArray, predictionsMap).deploy();
         });
+
+        printButton.setOnAction(e -> createPdf());
 
 
         //Scene
-        gridPane.getChildren().addAll(mainText, nText, textArea, lineChart, printButton, retButton, quitButton, customGridCheckBox.getPane());
+        gridPane.getChildren().addAll(mainText, nText, textArea, lineChart, printButton,
+                retButton, quitButton, customGridCheckBox.getPane(), excelButton);
         Scene scene = new Scene(gridPane, 1200, 800);
         //Adds icon to stage
         stage.getIcons().add(new Image(Objects.requireNonNull(StartBox.class.getClassLoader().getResourceAsStream("AppIcon.png"))));
@@ -240,6 +212,48 @@ public class SolutionBox {
 
         series.setName("Actual Need");
         lineChart.getData().add(series);
+    }
+
+    /**
+     * Creates pdf file of Line-Graph
+     *
+     */
+    private static void createPdf(){
+
+        File tempFile = new File("chart.png");
+        //selects path for pdf
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save pdf");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf"));
+
+
+        try {
+            // LineChart is being converted to .png file
+            ImageIO.write(SwingFXUtils.fromFXImage(lineChart.snapshot(new SnapshotParameters(), null), null),
+                    "png", tempFile);
+        } catch (IOException ignored) {
+
+        }
+
+        PDDocument doc = new PDDocument();
+        PDPage page = new PDPage();
+        PDImageXObject pdImage;
+        PDPageContentStream content;
+        try {
+            //pdf file is being created from temporary file
+            pdImage = PDImageXObject.createFromFile("chart.png", doc);
+            content = new PDPageContentStream(doc, page);
+            content.drawImage(pdImage, 50, 50, 550, 550);
+            content.close();
+            doc.addPage(page);
+            doc.save(fileChooser.showSaveDialog(new Stage()).getPath());
+            doc.close();
+            // tempFile (.png) is getting deleted
+            tempFile.delete();
+        } catch (Exception ignored) {
+
+        }
+
     }
 
 }
