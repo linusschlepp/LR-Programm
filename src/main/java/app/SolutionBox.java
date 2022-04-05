@@ -250,8 +250,9 @@ public class SolutionBox {
             doc.close();
             // tempFile (.png) is getting deleted
             tempFile.delete();
+            new MessageBox().display(new Text("Pdf was created successfully"), ErrorLevel.NORMAL);
         } catch (Exception ignored) {
-
+            new MessageBox().display(new Text("An error occurred"), ErrorLevel.ERROR);
         }
 
     }
