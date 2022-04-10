@@ -37,7 +37,7 @@ public class MessageBox {
             stage.setTitle(text.getText());
 
         // Scene and GridPane is created
-        Scene scene = new Scene(gridPane, 300, 300);
+        Scene scene = new Scene(gridPane, 300, 150);
         gridPane.setPadding(new Insets(10, 10, 10, 10));
         gridPane.setHgap(10);
         gridPane.setVgap(10);

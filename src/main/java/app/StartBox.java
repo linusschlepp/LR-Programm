@@ -137,7 +137,6 @@ public class StartBox {
 
 
         //final setup of scene and stage
-        //Scene scene = new Scene(gridPane, 1500, 700);
         gridPane.getChildren().addAll(label, mainText, calculateButton);
         Scene scene = new Scene(gridPane, 1500, 700);
         primaryStage.setTitle("LR-Program");

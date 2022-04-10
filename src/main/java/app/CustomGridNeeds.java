@@ -50,8 +50,8 @@ public class CustomGridNeeds extends GridPane {
     }
 
     private void specialListener(TextField t1) {
-        // Adds labels as well as TextFields to StartBox
-        // Listener gets only added to latest Textfield
+        // Add labels as well as TextFields to StartBox
+        // Listener gets only added to latest TextField
         ChangeListener<String> changeListener = new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {

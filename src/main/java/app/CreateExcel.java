@@ -9,7 +9,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,9 +37,12 @@ public class CreateExcel {
         AtomicInteger column = new AtomicInteger();
         firstRow.createCell(column.getAndIncrement()).setCellValue("Periods");
         firstRow.createCell(column.getAndIncrement()).setCellValue("Needs");
+
+        // Add names of parameters to Excel
         predictionsMap.keySet().forEach(k ->
                 firstRow.createCell(column.getAndIncrement()).setCellValue("n = "+k));
 
+        // Fills Excel with values
         for(int i = 0; i < needArray.length; i++) {
             Row row = sheet.createRow(i+1);
             row.createCell(0).setCellValue(i+1);
@@ -52,24 +54,23 @@ public class CreateExcel {
         column.set(2);
         // Adds the n values to the excel-file
         for(Integer integer : predictionsMap.keySet()){
-            int rowIndex = 0;
+            int rowIndex = integer-1;
 
             for(Double d : predictionsMap.get(integer))
                 rowList.get(rowIndex++).createCell(column.get()).setCellValue(d);
 
-            
             column.getAndIncrement();
         }
 
-        // Select path for excel file
+        // Select path for Excel file
         try {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Save pdf");
+            fileChooser.setTitle("Save Excel");
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XLSX files (*.xlsx)", "*.xlsx"));
             FileOutputStream out = new FileOutputStream(fileChooser.showSaveDialog(new Stage()).getPath());
             workbook.write(out);
             out.close();
-            new MessageBox().display(new Text("Excel was created successfully"), ErrorLevel.NORMAL);
+            new MessageBox().display(new Text("Excel was successfully created"), ErrorLevel.NORMAL);
         } catch (IOException e) {
             e.printStackTrace();
             new MessageBox().display(new Text("An error occurred"), ErrorLevel.ERROR);

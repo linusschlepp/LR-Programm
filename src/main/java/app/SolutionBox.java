@@ -2,8 +2,6 @@ package app;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
@@ -13,7 +11,6 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -24,7 +21,6 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -44,8 +40,6 @@ public class SolutionBox {
 
     private static LineChart<Number, Number> lineChart;
     private static final HashMap<CheckBox, XYChart.Series<Number, Number>> seriesHashMap = new HashMap<>();
-    // private static boolean alreadyInitialized = false;
-
 
     /**
      * Displays layout of the app.SolutionBox, displays solution
@@ -106,8 +100,6 @@ public class SolutionBox {
 
 
         //Buttons
-//        Button showPredictions = new Button("Show all predictions");
-//        GridPane.setConstraints(showPredictions, 1, 5);
         Button retButton = new Button("Enter new Data");
         GridPane.setConstraints(retButton, 1, 6);
         Button quitButton = new Button("Quit");
@@ -118,36 +110,16 @@ public class SolutionBox {
         GridPane.setConstraints(printButton, 1, 5);
 
 
-        //This code will maybe be used some time
-//        showPredictions.setOnAction(e -> {
-//            lineChart.getData().clear();
-//            initializeSeries(needArray);
-//
-//            predictionsMap.keySet().forEach(i -> {
-//                seriesAllPredictions = new XYChart.Series<>();
-//                for (int j = 0; j < new ArrayList<>(predictionsMap.get(i)).size(); j++)
-//                    seriesAllPredictions.getData().add(new XYChart.Data<>(Math.abs(new ArrayList<>(predictionsMap.get(i)).size()
-//                            - needArray.length) + j + 1, new ArrayList<>(predictionsMap.get(i)).get(j)));
-//
-//                seriesAllPredictions.setName("Predictions for n= " + i);
-//                lineChart.getData().add(seriesAllPredictions);
-//            });
-//            alreadyInitialized = true;
-//
-//        });
+
 
         //iterate through the HashMap of customGridCheckBox
         customGridCheckBox.getCheckBoxHashMap().keySet().forEach(checkBoxEntry -> {
             //for every item within the map of customGridCheckBox a Listener is being added
-            customGridCheckBox.getCheckBoxHashMap().get(checkBoxEntry).selectedProperty().addListener((observableValue, oldValue, newValue) -> {
+            customGridCheckBox.getCheckBoxHashMap().get(checkBoxEntry).selectedProperty()
+                    .addListener((observableValue, oldValue, newValue) -> {
                 // if the checkBox is selected the individual series is added to the chart
                 if (newValue) {
-//                    if (alreadyInitialized) {
-//                        lineChart.getData().clear();
-//                        initializeSeries(needArray);
-//                        alreadyInitialized = false;
-//
-//                    }
+
                     // new Series is being created
                     XYChart.Series<Number, Number> seriesPredictions = new XYChart.Series<>();
                     // A temporary Map is being created to operate on the values of predictionsMap
@@ -179,9 +151,7 @@ public class SolutionBox {
         // if the user wants to quit, the stage is closed
         quitButton.setOnAction(e -> stage.close());
 
-        excelButton.setOnAction(e -> {
-            new CreateExcel(needArray, predictionsMap).deploy();
-        });
+        excelButton.setOnAction(e -> new CreateExcel(needArray, predictionsMap).deploy());
 
         printButton.setOnAction(e -> createPdf());
 
@@ -250,7 +220,7 @@ public class SolutionBox {
             doc.close();
             // tempFile (.png) is getting deleted
             tempFile.delete();
-            new MessageBox().display(new Text("Pdf was created successfully"), ErrorLevel.NORMAL);
+            new MessageBox().display(new Text("Pdf was successfully created"), ErrorLevel.NORMAL);
         } catch (Exception ignored) {
             new MessageBox().display(new Text("An error occurred"), ErrorLevel.ERROR);
         }
