@@ -2,7 +2,7 @@
 ![image](https://user-images.githubusercontent.com/82322027/161436127-e6547656-fcfb-44c9-9151-8097a60e4e21.png)
 
 ## About
-This project simulates [linear regression](https://en.wikipedia.org/wiki/Linear_regression). By entering the needs and the according parameters, it calculates the needs for the upcoming periods and displays it in a line-graph as well as numerically. The line graph can be exported into a .pdf-file. 
+This project simulates [linear regression](https://en.wikipedia.org/wiki/Linear_regression). By entering the needs and the according parameters, it calculates the needs for the upcoming periods and displays it in a line-graph as well as numerically. The line graph can be exported into a .pdf-file, the calculated and actual needs can be exported into an Excel-Sheet. 
 
 ## This program uses
 * JavaFx
