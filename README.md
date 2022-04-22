@@ -5,8 +5,10 @@
 This project simulates [linear regression](https://en.wikipedia.org/wiki/Linear_regression). By entering the needs and the according parameters, it calculates the needs for the upcoming periods and displays it in a line-graph as well as numerically. The line graph can be exported into a .pdf-file, the calculated and actual needs can be exported into an Excel-Sheet. 
 
 ## This program uses
-* JavaFx
-* Maven
+* [JavaFx](https://openjfx.io/)
+* [Maven](https://maven.apache.org/)
+* [Apache POI](https://poi.apache.org/)
+* [Google Guava Multimap](https://guava.dev/releases/23.0/api/docs/com/google/common/collect/Multimap.html)
 
 
 ## Setup
